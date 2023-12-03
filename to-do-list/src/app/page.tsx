@@ -1,22 +1,46 @@
 "use client"
-import { useState } from 'react'
+import React from 'react';
+import {useState } from 'react';
 
 export default function Home() {
-  const [name,setName] = useState("A cool guy");
+  const [name, setName] = useState("A cool guy");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const submitHandler = (e:any) => {
+  const [mainTask, setMainTask] = useState<{ title: string, desc: string }[]>([]);
+  const submitHandler = (e: any) => {
     e.preventDefault();
-    console.log(title);
+    setMainTask([...mainTask, { title, desc }])
+
+    console.log(mainTask);
     console.log(desc);
     setTitle("");
     setDesc("");
+
   }
+  let taskRender : JSX.Element[] =[( <div className='px-5 py-2 rounded-md w-full mb-5 h-fit bg-white backdrop-blur-sm text-center'>No task Pending</div>)]
+  if(mainTask.length>0){
+    taskRender  = mainTask.map((item, i) => {
+        return (<>
+          <div className='px-5 py-2 rounded-md mb-5 w-[80%] h-fit bg-white backdrop-blur-sm text-center'>
+            <h2 className='text-xl font-semibold'>
+              {item.title} 
+            </h2>
+            <h3>
+              {item.desc}
+            </h3>
+          </div>
+        </>)
+      
+    })
+  
+  }
+  //taskRender = <div className='px-5 py-2 rounded-md w-full mb-5 h-fit bg-white backdrop-blur-sm text-center'>No task Pending</div>
+  
 
   return (
     <>
-      <div className=' w-full h-screen font-sans bg-purple-100'>
-        <h1 className='bg-purple-500 p-6 text-center text-white font-bold  text-3xl'>{name}'s To do list</h1>
+      <div className=' w-full h-[100%] font-sans bg-purple-100'>
+        <h1 className='bg-purple-500 p-6 text-center text-white font-bold text-3xl'>{name}'s To do list</h1>
         <div className='flex py-14 h-fit justify-center mx-7'>
           <div className='flex gap-2 w-fit'>
             <form className='' action="" onSubmit={() => { submitHandler }}>
@@ -25,12 +49,12 @@ export default function Home() {
                 onChange={(e) => {
                   setTitle(e.target.value);
                 }} />
-                <textarea placeholder='Enter your description' className='px-2 py-1 mb-3 rounded-md border-2 border-purple-600 w-[100%] h-20' name="" id="" cols={30} rows={10}
+              <textarea placeholder='Enter your description' className='px-2 py-1 mb-3 rounded-md border-2 border-purple-600 w-[100%] h-20' name="" id="" cols={30} rows={10}
                 value={desc}
                 onChange={(e) => {
                   setDesc(e.target.value);
-                }} 
-                ></textarea>
+                }}
+              ></textarea>
               <div className='flex w-full h-fit'>
                 <button className='h-10 w-full m-auto rounded-md py-1.5 px-6 bg-purple-600 text-white' onClick={submitHandler}>Save</button>
               </div>
@@ -38,10 +62,8 @@ export default function Home() {
           </div>
 
         </div>
-        <div className='flex h-fit justify-center w-full'>
-          <div className='px-5 py-2 rounded-md w-10/12 h-fit bg-white backdrop-blur-sm text-center'>
-            hello
-          </div>
+        <div className='grid h-fit place-items-center'>
+          {taskRender}
         </div>
       </div>
 
